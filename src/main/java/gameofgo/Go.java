@@ -13,6 +13,51 @@ public class Go {
 	private char[][] 	board;		// first dimension is up/down  second dimension is left right
 									// Origin is at the bottom left corner of the game board
 	
+	
+	
+	
+	/**
+	 * Given y,x indices for the board, return the corresponding 
+	 * @param y
+	 * @param x
+	 * @return
+	 */
+	public String translateCoords(int y, int x) {
+		String let = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(y));
+		String num = Integer.toString(x+1);
+		return num+let;
+	}
+	
+	/** 
+	 * 
+	 * @param cords ex: A1 or J15
+	 * @return array of y,x index positions on board.  
+	 */
+	public int[] translateCoords(String cords) {
+		int[] ret = new int[2];
+		
+		
+		
+		
+		return ret;
+	}
+	
+	/**
+	 * Find groups
+	 */
+	public findGroups() {
+		
+		
+		// First let's find all connections
+		for (int x = 0; x < xdim; x++) {
+			// let's just start by 
+			
+		}
+		
+		
+		
+	}
+	
 	public String getTurn() {
 		if (currentTurn == 'o') return "black";
 		return "white";
@@ -41,6 +86,39 @@ public class Go {
 			}
 		}
 		
+	}
+	
+	
+	
+	/**
+	 * Create a game in progress
+	 * @param positions comma delimited string of occupied spaces ex "1Ax,1Bx,2Bx,6Co,6Do"...etc
+	 * @param turn o-black or x-white
+	 */
+	public Go(String positions, char turn, int dimension) {
+		
+		
+	}
+	
+	/**
+	 * Create a game in progress
+	 * @param positions comma delimited string of occupied spaces ex "1Ax,1Bx,2Bx,6Co,6Do"...etc
+	 * @param turn o-black or x-white
+	 */
+	public Go(String positions, char turn, int yDim, int xDim) {
+		
+		
+	}
+	
+	/** 
+	 *  Create a new game in progress
+	 * @param board (all square should be contain [.,o,x]
+	 * @param turn	o-black  x-white
+	 */
+	public Go(char[][] board, char turn) {
+		// do we do a copy?
+		this.board = board;
+		currentTurn = turn;
 	}
 	
 	/**
