@@ -13,19 +13,16 @@ public class Go {
 	private char[][] 	board;		// first dimension is up/down  second dimension is left right
 									// Origin is at the bottom left corner of the game board
 	
-	
-	
-	
 	/**
 	 * Given y,x indices for the board, return the corresponding 
 	 * @param y
 	 * @param x
 	 * @return
 	 */
-	public String translateCoords(int y, int x) {
-		String let = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(y));
-		String num = Integer.toString(x+1);
-		return num+let;
+	public static String translateCoords(int y, int x) {
+		String l = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(x));
+		String n = Integer.toString(y+1);
+		return n + l;
 	}
 	
 	/** 
@@ -33,11 +30,15 @@ public class Go {
 	 * @param cords ex: A1 or J15
 	 * @return array of y,x index positions on board.  
 	 */
-	public int[] translateCoords(String cords) {
-		int[] ret = new int[2];
+	public static int[] translateCoords(String cords) {
+		int[] ret = new int[2]; 
 		
-		
-		
+		cords = cords.trim();
+		String l = cords.substring(cords.length()-1);
+		String n = cords.substring(0,cords.length()-1);
+
+		ret[0] = Integer.parseInt(n)-1;
+		ret[1] = "ABCDEFGHJKLMNOPQRST".indexOf(l);
 		
 		return ret;
 	}
@@ -45,16 +46,32 @@ public class Go {
 	/**
 	 * Find groups
 	 */
-	public findGroups() {
-		
+	public void findGroups() {
+		//TODO : Stopped here
 		
 		// First let's find all connections
-		for (int x = 0; x < xdim; x++) {
-			// let's just start by 
+		for (int y = 0; y < ydim-1; y++) {
+			// let's just start by finding connections
+			// we just need to check right and up
+			for (int x = 0; x < xdim-1; x++) {
+				char thisChar = this.board[y][x];
+				if (thisChar == '.') continue;
+				
+				char aboveChar = board[y+1][x];
+				char rightChar = board[y][x+1];
+				
+				if (thisChar == aboveChar) {
+					System.out.printf("y=%d  x=%d\n",y,x);
+					System.out.println(translateCoords(y,x) + " - " + translateCoords(y-1,x));
+				}
+				
+				if (thisChar == rightChar) {
+					System.out.printf("y=%d  x=%d\n",y,x);
+					System.out.println(translateCoords(y,x) + " - " + translateCoords(y,x+1));
+				}
+			}
 			
 		}
-		
-		
 		
 	}
 	
@@ -103,11 +120,28 @@ public class Go {
 	/**
 	 * Create a game in progress
 	 * @param positions comma delimited string of occupied spaces ex "1Ax,1Bx,2Bx,6Co,6Do"...etc
-	 * @param turn o-black or x-white
+	 * @param yDim height of the board
+	 * @param xDim width of the board
 	 */
-	public Go(String positions, char turn, int yDim, int xDim) {
+	public Go(String positions, int yDim, int xDim) {
+		this.xdim = xDim;
+		this.ydim = yDim;
+		board = new char[yDim][];
+		for (int y = 0; y < yDim; y++) {
+			board[y] = new char[xDim];
+			for (int x = 0; x < xDim; x++) {
+				board[y][x] = '.';
+			}
+		}
 		
-		
+				
+		String[] sa = positions.split(",");
+		for (String s : sa) {
+			System.out.println(s);
+			char piece = s.charAt(s.length()-1);
+			int[] ia = Go.translateCoords(s.substring(0,s.length()-1));
+			board[ia[0]][ia[1]] = piece;
+		}
 	}
 	
 	/** 

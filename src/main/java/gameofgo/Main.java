@@ -5,8 +5,18 @@ import org.junit.Test;
 public class Main {
 	
 	public static void main(String[] args) {
+
+		
 		Go game = null;
-		try {
+		String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
+		game = new Go(positions,5,6);
+		game.printBoard();
+		
+		game.findGroups();
+		
+		
+		
+		/*try {
 			game = new Go(6,5);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -49,6 +59,8 @@ public class Main {
 		System.out.println(game.getTurn() + "'s turn");
 		
 		///////////////////////////
+		 *
+		 */
 		
 		
 
