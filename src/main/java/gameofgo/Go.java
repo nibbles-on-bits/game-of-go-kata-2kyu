@@ -43,11 +43,27 @@ public class Go {
 		return ret;
 	}
 	
+	
+	/**
+	 * build an array of connected elements
+	 * @param y
+	 * @param x
+	 */
+	public void findGroup(int y, int x) {
+		int[][] group = new int[][];
+		int[] location = new int[2];
+		
+		
+	}
+	
 	/**
 	 * Find groups
 	 */
 	public void findGroups() {
 		//TODO : Stopped here
+		
+		String[] edges = new String[];
+		
 		
 		// First let's find all connections
 		for (int y = 0; y < ydim-1; y++) {
@@ -60,16 +76,22 @@ public class Go {
 				char aboveChar = board[y+1][x];
 				char rightChar = board[y][x+1];
 				
+				System.out.printf("y=%d  x=%d\n",y,x);
 				if (thisChar == aboveChar) {
-					System.out.printf("y=%d  x=%d\n",y,x);
-					System.out.println(translateCoords(y,x) + " - " + translateCoords(y-1,x));
+					// AddEdge(y,x,y+1,x)
+					System.out.println(translateCoords(y,x) + " - " + translateCoords(y+1,x));
 				}
 				
 				if (thisChar == rightChar) {
-					System.out.printf("y=%d  x=%d\n",y,x);
 					System.out.println(translateCoords(y,x) + " - " + translateCoords(y,x+1));
 				}
 			}
+			
+			
+			// now we have a bunch of pairings.  We want to search through the pairings to see 
+			// what pairings can tie together.
+			
+			
 			
 		}
 		
