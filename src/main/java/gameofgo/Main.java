@@ -8,11 +8,12 @@ public class Main {
 
 		
 		Go game = null;
-		String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
-		game = new Go(positions,5,6);
+		//String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
+		String positions = "1Ax,1Cx,1Dx,2Ax,2Cx,2Dx,2Hx,3Ax,3Bx,3Cx,4Bx,5Bx,6Bx,7Cx,7Dx,8Ax,1Ho,2Ho,4Eo,4Fo,4Go,5Do,5Eo,5Go,6Eo,6Fo,6Go,7Eo,7Fo,7Ho,8Co,8Do,8Eo";
+		game = new Go(positions,8,8);
 		game.printBoard();
 		
-		game.findGroups();
+		//game.findGroups();
 		
 		
 		

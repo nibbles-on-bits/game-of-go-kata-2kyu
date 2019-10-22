@@ -1,5 +1,7 @@
 package gameofgo;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Go {
@@ -44,15 +46,60 @@ public class Go {
 	}
 	
 	
+	
+	
 	/**
-	 * build an array of connected elements
-	 * @param y
-	 * @param x
+	 * Build a group of positions that are part of a position
+	 * @param y	y-coordinate of search starting location
+	 * @param x x-coordinate of search starting location
 	 */
-	public void findGroup(int y, int x) {
-		int[][] group = new int[][];
-		int[] location = new int[2];
+	public void findGroup(int y_idx, int x_idx) {
 		
+		List<Position> group = new ArrayList<Position>();
+		group.add(new Position(y_idx, x_idx));
+		
+		int ptr = 0;  
+		
+		if (board[y_idx][x_idx] == '.') {
+			System.out.printf("board[%d][%d] is empty\n", y_idx, x_idx);
+			// TODO : throw an exception here
+			return;
+		}
+		
+		
+	
+		boolean done = false;
+		while (!done) {
+			// if there is a left neighbor and it has the same value
+			if ((x_idx != 0) && board[y_idx][x_idx-1] == board[y_idx][x_idx]) {
+				// TODO : make sure the group doesn't already have this position
+				group.add(new Position(y_idx, x_idx-1));
+			}
+			
+			// if there is a above neighbor and it has the same value
+			if ((y_idx != this.ydim-1) && board[y_idx+1][x_idx] == board[y_idx][x_idx]) {
+				// TODO : make sure the group doesn't already have this position
+				group.add(new Position(y_idx+1, x_idx));
+			}
+			
+			// if there is a right neighbor and it has the same value
+			if ((x_idx != this.xdim-1) && board[y_idx][x_idx+1] == board[y_idx][x_idx]) {
+				// TODO : make sure the group doesn't already have this position
+				group.add(new Position(y_idx, x_idx+1));
+			}
+			
+			// if there is a below neighbor and it has the same value
+			if ((y_idx != 0) && board[y_idx-1][x_idx] == board[y_idx][x_idx]) {
+				// TODO : make sure the group doesn't already have this position
+				group.add(new Position(y_idx-1, x_idx));
+			}
+			
+			
+			// we are done if the ptr is at the end of the list and all neighbors with same value have been added
+			if (ptr == group.size()-1) { done = true; }
+			// if we aren't done, advance the pointer on the list
+			
+		}
 		
 	}
 	
@@ -61,8 +108,9 @@ public class Go {
 	 */
 	public void findGroups() {
 		//TODO : Stopped here
+		String[] xGroups;
+		String[] oGroups;
 		
-		String[] edges = new String[];
 		
 		
 		// First let's find all connections
@@ -72,6 +120,8 @@ public class Go {
 			for (int x = 0; x < xdim-1; x++) {
 				char thisChar = this.board[y][x];
 				if (thisChar == '.') continue;
+				
+				// First see if this already belongs to a group, if not then create a new group
 				
 				char aboveChar = board[y+1][x];
 				char rightChar = board[y][x+1];
