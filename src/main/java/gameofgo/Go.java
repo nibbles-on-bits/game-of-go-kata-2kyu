@@ -45,7 +45,11 @@ public class Go {
 		return ret;
 	}
 	
-	
+	public void findGroup(String position) {
+		int y = Go.translateCoords(position)[0];
+		int x = Go.translateCoords(position)[1];
+		findGroup(y,x);
+	}
 	
 	
 	/**
