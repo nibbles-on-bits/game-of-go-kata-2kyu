@@ -15,6 +15,40 @@ public class Go {
 	private char[][] 	board;		// first dimension is up/down  second dimension is left right
 									// Origin is at the bottom left corner of the game board
 	
+	
+	/**
+	 * Place handicap stone(s) on the board.  
+	 * for 9x9 boards, up to 5 stones
+	 * for 13x13 boards, up to 9 stones
+	 * for 19x19 boards, up to 9 stones
+	 * 9x9		G7,C3,G3,C7,E5
+	 * 13x13	J10,D4,J4,D10,G7,D7,J7,G10
+	 * 19x19	Q16,D4,Q4,D16,K10,D10,Q10,K16,K4
+	 * 
+	 * @param stones
+	 */
+	public void handicapStones(int stones) {
+		
+		if (!((xdim==9 && ydim==9) || (xdim==13 && ydim==13) || (xdim==19 && ydim==19))) {
+			return;
+		}
+		
+		if (xdim==9 && ydim == 9) {
+			
+		}
+		
+		if (xdim==13 && ydim == 13) {
+			
+		}
+		
+		if (xdim==19 && ydim == 19) {
+			
+		}
+			
+		
+		
+	}
+	
 	/**
 	 * Given y,x indices for the board, return the corresponding 
 	 * @param y
@@ -45,68 +79,6 @@ public class Go {
 		return ret;
 	}
 	
-	public void findGroup(String position) {
-		int y = Go.translateCoords(position)[0];
-		int x = Go.translateCoords(position)[1];
-		findGroup(y,x);
-	}
-	
-	
-	/**
-	 * Build a group of positions that are part of a position
-	 * @param y	y-coordinate of search starting location
-	 * @param x x-coordinate of search starting location
-	 */
-	public void findGroup(int y_idx, int x_idx) {
-		
-		List<Position> group = new ArrayList<Position>();
-		group.add(new Position(y_idx, x_idx));
-		
-		int ptr = 0;  
-		
-		if (board[y_idx][x_idx] == '.') {
-			System.out.printf("board[%d][%d] is empty\n", y_idx, x_idx);
-			// TODO : throw an exception here
-			return;
-		}
-		
-		
-	
-		boolean done = false;
-		while (!done) {
-			// if there is a left neighbor and it has the same value
-			if ((x_idx != 0) && board[y_idx][x_idx-1] == board[y_idx][x_idx]) {
-				// TODO : make sure the group doesn't already have this position
-				group.add(new Position(y_idx, x_idx-1));
-			}
-			
-			// if there is a above neighbor and it has the same value
-			if ((y_idx != this.ydim-1) && board[y_idx+1][x_idx] == board[y_idx][x_idx]) {
-				// TODO : make sure the group doesn't already have this position
-				group.add(new Position(y_idx+1, x_idx));
-			}
-			
-			// if there is a right neighbor and it has the same value
-			if ((x_idx != this.xdim-1) && board[y_idx][x_idx+1] == board[y_idx][x_idx]) {
-				// TODO : make sure the group doesn't already have this position
-				group.add(new Position(y_idx, x_idx+1));
-			}
-			
-			// if there is a below neighbor and it has the same value
-			if ((y_idx != 0) && board[y_idx-1][x_idx] == board[y_idx][x_idx]) {
-				// TODO : make sure the group doesn't already have this position
-				group.add(new Position(y_idx-1, x_idx));
-			}
-			
-			
-			// we are done if the ptr is at the end of the list and all neighbors with same value have been added
-			if (ptr == group.size()-1) { done = true; }
-			// if we aren't done, advance the pointer on the list
-			
-		}
-		
-	}
-	
 	/**
 	 * Find groups
 	 */
@@ -114,8 +86,6 @@ public class Go {
 		//TODO : Stopped here
 		String[] xGroups;
 		String[] oGroups;
-		
-		
 		
 		// First let's find all connections
 		for (int y = 0; y < ydim-1; y++) {
@@ -141,12 +111,8 @@ public class Go {
 				}
 			}
 			
-			
 			// now we have a bunch of pairings.  We want to search through the pairings to see 
 			// what pairings can tie together.
-			
-			
-			
 		}
 		
 	}

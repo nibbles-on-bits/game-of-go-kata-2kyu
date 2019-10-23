@@ -12,7 +12,13 @@ public class Main {
 		String positions = "1Ax,1Cx,1Dx,2Ax,2Cx,2Dx,2Hx,3Ax,3Bx,3Cx,4Bx,5Bx,6Bx,7Cx,7Dx,8Ax,1Ho,2Ho,4Eo,4Fo,4Go,5Do,5Eo,5Go,6Eo,6Fo,6Go,7Eo,7Fo,7Ho,8Co,8Do,8Eo";
 		game = new Go(positions,8,8);
 		game.printBoard();
-		game.findGroup(0,0);
+		Group g = Group.findGroup(0, 0, game.getBoard());
+		System.out.println(g.containsPosition("1A"));
+		System.out.println(g.containsPosition("1B"));
+		//game.findGroup(0,0);
+		
+		// Test Group.containsPosition(int, int)
+		
 		//game.findGroups();
 		
 		

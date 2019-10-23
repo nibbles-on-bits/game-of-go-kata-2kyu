@@ -14,7 +14,7 @@ public class Position implements Comparator <Position>{
 		yCoord = y_idx;
 		xCoord = x_idx;
 		String l = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(x_idx));
-		String n = Integer.toString(y_idx-1);
+		String n = Integer.toString(y_idx+1);
 		chrPos = l + n ;
 		
 		return;
