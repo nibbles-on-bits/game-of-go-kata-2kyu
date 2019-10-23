@@ -17,6 +17,31 @@ public class Go {
 	
 	
 	/**
+	 * Place a series of stones on the board
+	 * @param stones		A comma delimited string of positions 1Ao,2Ao...etc
+	 */
+	private void placeStones(String stones) {
+		//this.xdim = xDim;
+		//this.ydim = yDim;
+		//board = new char[yDim][];
+		for (int y = 0; y < this.ydim; y++) {
+			board[y] = new char[this.xdim];
+			for (int x = 0; x < this.xdim; x++) {
+				board[y][x] = '.';
+			}
+		}
+				
+		String[] sa = stones.split(",");
+		for (String s : sa) {
+			System.out.println(s);
+			char piece = s.charAt(s.length()-1);
+			int[] ia = Go.translateCoords(s.substring(0,s.length()-1));
+			board[ia[0]][ia[1]] = piece;
+		}
+		
+	}
+	
+	/**
 	 * Place handicap stone(s) on the board.  
 	 * for 9x9 boards, up to 5 stones
 	 * for 13x13 boards, up to 9 stones
@@ -30,14 +55,21 @@ public class Go {
 	public void handicapStones(int stones) {
 		
 		if (!((xdim==9 && ydim==9) || (xdim==13 && ydim==13) || (xdim==19 && ydim==19))) {
+			
 			return;
 		}
 		
+		String[] sa;
+		
 		if (xdim==9 && ydim == 9) {
+			String[] sa = new String[] {
+			
+			}
 			
 		}
 		
 		if (xdim==13 && ydim == 13) {
+			String[] sa
 			
 		}
 		
@@ -169,7 +201,10 @@ public class Go {
 		this.xdim = xDim;
 		this.ydim = yDim;
 		board = new char[yDim][];
-		for (int y = 0; y < yDim; y++) {
+		
+		this.placeStones(positions);
+		
+		/*for (int y = 0; y < yDim; y++) {
 			board[y] = new char[xDim];
 			for (int x = 0; x < xDim; x++) {
 				board[y][x] = '.';
@@ -183,7 +218,8 @@ public class Go {
 			char piece = s.charAt(s.length()-1);
 			int[] ia = Go.translateCoords(s.substring(0,s.length()-1));
 			board[ia[0]][ia[1]] = piece;
-		}
+		}*/
+		
 	}
 	
 	/** 
