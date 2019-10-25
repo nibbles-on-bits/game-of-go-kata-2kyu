@@ -8,6 +8,34 @@ public class Group {
 	private List<Position> Positions = new ArrayList<Position>();
 	private char player;
 	
+
+	public void print() {
+		System.out.print(" " + player + ": ");
+		for (Position p : Positions) {
+			p.print();
+			System.out.print(" ");
+		}
+		System.out.println();
+	}
+	
+	
+	/**
+	 * Determine if this group has been captured by the opponent
+	 * @param game
+	 * @return
+	 */
+	public boolean isCaptured(Go game) {
+		char opponent = (player=='o' ? 'x' : 'o');
+		List<Position> liberties = findGroupLiberties(game);
+		
+		for (Position p : liberties) {
+			if (game.getPositionValue(p) != opponent) return false;
+		}
+		
+		return true;
+	}
+	
+	
 	
 	// TODO : build this.
 	/**
@@ -39,45 +67,78 @@ public class Group {
 			int y = p.getY();
 			
 			if ((x != 0) && board[y][x-1] != player) {
-				liberties.add(p);
-				System.out.println(p.toString());
+				Position lp = new Position(y,x-1);
+				if (!lp.isInPositionList(liberties)) 
+					liberties.add(lp);
 			}
 
 			// above neighbor
 			if ((y != game.getBoardHeight()-1) && board[y+1][x] != player) {
-				liberties.add(p);
-				System.out.println(p.toString());
+				Position lp = new Position(y+1,x);
+				if (!lp.isInPositionList(liberties))
+					liberties.add(lp);
 				
 			}
 			
 			// Right neighbor
 			if ((x != game.getBoardWidth()-1) && board[y][x+1] != player) {
-				liberties.add(p);
-				System.out.println(p.toString());
+				Position lp = new Position(y,x+1);
+				if (!lp.isInPositionList(liberties))
+					liberties.add(lp);
 			}
 			
 			// Below neighbor
 			if ((y != 0) && board[y-1][x] != player) {
-				liberties.add(p);
-				System.out.println(p.toString());
+				Position lp = new Position(y-1,x);
+				if (!lp.isInPositionList(liberties))
+					liberties.add(lp);
 			}
 				
+		}
+		
+		for (Position lp : liberties) {
+			lp.print();
+			System.out.print(" ");
 		}
 		
 		return liberties;
 	}
 	
-	//TODO : come up with an algorithm to determine if all liberties of a group are occupied by the opponent pieces.
-	/*public static List<Group> findAllGroups(char[][] board) {
-		for (int y = 0; y < board.length; y++) {
-			for (int x = 0; x < y[x]; x++) {
-				Group g = Group.findGroup(y_idx, x_idx, board);
+
+	
+	/**
+	 * 
+	 * @param board
+	 * @return
+	 */
+	public static List<Group> findAllGroups(char[][] board) {
+		int ydim = board.length;
+		int xdim = board[0].length;
+		
+		List<Group> groups = new ArrayList<Group>();
+		
+		for (int y = 0; y < ydim; y++) {
+			for (int x = 0; x < xdim; x++) {
+				// First make sure this square isn't part of any groups
+				boolean posInGroups = false;
+				for (Group g : groups) {
+					if (g == null) continue;
+					if (g.containsPosition(y, x)){
+						posInGroups = true;
+					}
+				}
+				
+				if (posInGroups == false) {
+					Group g = findGroup(y,x,board);
+					if (g != null) groups.add(g);
+				}
+			
 				
 			}
 		}
-		Group[] groups = new Group[];
-	}*/
-	
+		
+		return groups;
+	}
 	
 	/**
 	 * Build a group of positions that are part of a position
@@ -87,12 +148,14 @@ public class Group {
 	public static Group findGroup(int y_idx, int x_idx, char[][] board) {
 		int ydim = board.length;
 		int xdim = board[0].length;
-			
-		if (board[y_idx][x_idx] == '.') {
-			System.out.printf("board[%d][%d] is empty\n", y_idx, x_idx);
+		char player = board[y_idx][x_idx];
+		
+		if (player == '.') {
+			//System.out.printf("board[%d][%d] is empty\n", y_idx, x_idx);
 			// TODO : throw an exception here
 			return null;
 		}
+		
 		
 		int ptr = 0; 
 		Group group = new Group(board[y_idx][x_idx]);
@@ -106,25 +169,25 @@ public class Group {
 			x_idx = group.getPositionAt(ptr).getX();
 			
 			// if there is a left neighbor and it has the same value
-			if ((x_idx != 0) && board[y_idx][x_idx-1] == board[y_idx][x_idx]) {
+			if ((x_idx != 0) && board[y_idx][x_idx-1] == player) {
 				group.addPosition(y_idx, x_idx-1);
 				//Go.addPositionToGroup(y_idx, x_idx-1, group);
 			}
 			
 			// if there is a above neighbor and it has the same value
-			if ((y_idx != ydim-1) && board[y_idx+1][x_idx] == board[y_idx][x_idx]) {
+			if ((y_idx != ydim-1) && board[y_idx+1][x_idx] == player) {
 				group.addPosition(y_idx+1, x_idx);
 				//Go.addPositionToGroup(y_idx+1, x_idx, group);
 			}
 			
 			// if there is a right neighbor and it has the same value
-			if ((x_idx != xdim-1) && board[y_idx][x_idx+1] == board[y_idx][x_idx]) {
+			if ((x_idx != xdim-1) && board[y_idx][x_idx+1] == player) {
 				group.addPosition(y_idx,x_idx+1);
 				//Go.addPositionToGroup(y_idx, x_idx+1, group);
 			}
 			
 			// if there is a below neighbor and it has the same value
-			if ((y_idx != 0) && board[y_idx-1][x_idx] == board[y_idx][x_idx]) {
+			if ((y_idx != 0) && board[y_idx-1][x_idx] == player) {
 				group.addPosition(y_idx-1, x_idx);
 				//Go.addPositionToGroup(y_idx-1, x_idx, group);
 			}
@@ -199,11 +262,6 @@ public class Group {
 			}
 		}
 		return false;
-	}
-
-	public static Group[] findAllGroups(char[][] board) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -18,6 +18,10 @@ public class Go {
 	
 	public int getBoardHeight() { return ydim;}
 	public int getBoardWidth() { return xdim;}
+	
+	public char getPositionValue(Position p) {
+		return board[p.getY()][p.getX()];
+	}
 
 	/**
 	 * required by codewars kata
@@ -42,11 +46,18 @@ public class Go {
 		}
 	}
 	
+	/**
+	 * Skip your turn
+	 */
 	public void passTurn() {
 		currentTurn = (currentTurn=='o') ? 'x' : 'o';
 	}
 	
 	
+	
+	/**
+	 * Clear the board and reset the player to black ('o')
+	 */
 	public void reset() {
 		currentTurn = 'o';
 		for (int y = 0; y < ydim; y++) {
@@ -115,15 +126,15 @@ public class Go {
 	
 	/** 
 	 * 
-	 * @param cords ex: A1 or J15
+	 * @param cords ex: 1A or 15J
 	 * @return array of y,x index positions on board.  
 	 */
 	public static int[] translateCoords(String cords) {
 		int[] ret = new int[2]; 
 		
 		cords = cords.trim();
-		String n = cords.substring(1);
-		String l = cords.substring(0,1);
+		String l = cords.substring(1);
+		String n = cords.substring(0,1);
 
 		ret[0] = Integer.parseInt(n)-1;
 		ret[1] = "ABCDEFGHJKLMNOPQRST".indexOf(l);
@@ -204,7 +215,22 @@ public class Go {
 	 * @param positions comma delimited string of occupied spaces ex "1Ax,1Bx,2Bx,6Co,6Do"...etc
 	 * @param turn o-black or x-white
 	 */
-	public Go(String positions, char turn, int dimension) {
+	public Go(String positions, int dimension, char turn) {
+		
+		this.currentTurn = turn;
+		this.xdim = dimension;
+		this.ydim = dimension;
+		board = new char[this.ydim][];
+		
+		for (int y = 0; y < this.ydim; y++) {
+			board[y] = new char[this.xdim];
+			for (int x = 0; x < this.xdim; x++) {
+				board[y][x] = '.';
+			}
+		}
+		
+		this.placeStones(positions);
+			
 		
 		
 	}
@@ -215,7 +241,9 @@ public class Go {
 	 * @param yDim height of the board
 	 * @param xDim width of the board
 	 */
-	public Go(String positions, int yDim, int xDim) {
+	public Go(String positions, int yDim, int xDim, char turn) {
+		
+		this.currentTurn = turn;
 		this.xdim = xDim;
 		this.ydim = yDim;
 		board = new char[yDim][];

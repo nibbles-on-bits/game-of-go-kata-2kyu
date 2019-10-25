@@ -1,23 +1,75 @@
 package gameofgo;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class Main {
 	
 	public static void main(String[] args) {
-
 		
+		/////////////////////////// Find all groups //////////////////////
 		
 		Go game = null;
-		//String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
-		String positions = "1Ax,1Cx,1Dx,2Ax,2Cx,2Dx,2Hx,3Ax,3Bx,3Cx,4Bx,5Bx,6Bx,7Cx,7Dx,8Ax,1Ho,2Ho,4Eo,4Fo,4Go,5Do,5Eo,5Go,6Eo,6Fo,6Go,7Eo,7Fo,7Ho,8Co,8Do,8Eo";
-		game = new Go(positions,8,8);
+		String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
+		//String positions = "1Ax,1Bx,1Fo,2Bo";
+		game = new Go(positions,8,8,'o');
 		game.printBoard();
+		System.out.println();
+		System.out.println("All Groups: ");
+		List<Group> groups = Group.findAllGroups(game.getBoard());
+		for (Group g : groups) {
+			g.print();
+		}
+		
+		
+
+		
+		/////////////////// captured test 1 /////////////////////
+		/*
+		Go game = null;
+		String positions = "1Ax,2Ao,1Bo";
+		game = new Go(positions,8,8, 'o');
+		game.printBoard();
+		
 		
 		//Group[] groups = Group.findAllGroups(game.getBoard());
 	
 		Group g = Group.findGroup(0, 0, game.getBoard());
+		g.print();
 		g.findGroupLiberties(game);
+
+		System.out.println();
+		if (g.isCaptured(game)) {
+			System.out.println("\nGroup CAPTURED");
+		} else {
+			System.out.println("\nGroup NOT CAPTURED");
+		}*/
+		
+		
+		///////////////////////// captured test 2 ////////////////////////////////////////////
+		
+		/*Go game = null;
+		//String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
+		//String positions = "1Ax,1Cx,1Dx,2Ax,2Cx,2Dx,2Hx,3Ax,3Bx,3Cx,4Bx,5Bx,6Bx,7Cx,7Dx,8Ax,1Ho,2Ho,4Eo,4Fo,4Go,5Do,5Eo,5Go,6Eo,6Fo,6Go,7Eo,7Fo,7Ho,8Co,8Do,8Eo,4Co";	//3Co
+		String positions = "1Ax,1Cx,1Dx,2Ax,2Cx,2Dx,2Hx,3Ax,3Bx,3Cx,4Bx,5Bx,6Bx,7Cx,7Dx,8Ax,1Ho,2Ho,4Eo,4Fo,4Go,5Do,5Eo,5Go,6Eo,6Fo,6Go,7Eo,7Fo,7Ho,8Co,8Do,8Eo,4Co,1Bo,2Bo,4Ao,3Co,4Co,5Ao,5Co,6Ao,7Bo,6Co,3Do,1Eo,2Eo";	//3Co
+		game = new Go(positions,8,8, 'o');
+		game.printBoard();
+		
+		
+		//Group[] groups = Group.findAllGroups(game.getBoard());
+	
+		Group g = Group.findGroup(0, 0, game.getBoard());
+		g.print();
+		g.findGroupLiberties(game);
+		System.out.println();
+		if (g.isCaptured(game)) {
+			System.out.println("Group CAPTURED");
+		} else {
+			System.out.println("Group NOT CAPTURED");
+		}*/
+		
+		
 		
 		//System.out.println(g.containsPosition("1A"));
 		//System.out.println(g.containsPosition("1B"));

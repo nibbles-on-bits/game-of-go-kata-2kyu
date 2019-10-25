@@ -1,5 +1,6 @@
 package gameofgo;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Position implements Comparator <Position>{
@@ -15,7 +16,7 @@ public class Position implements Comparator <Position>{
 		xCoord = x_idx;
 		String l = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(x_idx));
 		String n = Integer.toString(y_idx+1);
-		chrPos = l + n ;
+		chrPos = n + l ;
 		
 		return;
 	}
@@ -31,6 +32,26 @@ public class Position implements Comparator <Position>{
 
 	public int compare(Position o1, Position o2) {
 		return Math.abs(o1.getX() - o2.getX()) + Math.abs(o1.getY() - o2.getY());
+	}
+	
+	public void print() {
+		System.out.print(chrPos);
+	}
+	
+	/**
+	 * Determine if a list contains a position with the same coordinates as this
+	 * @param pList The list of positions to check.
+	 */
+	public boolean isInPositionList(ArrayList<Position> pList) {
+		boolean ret = false;
+		
+		for (Position p: pList) {
+			if ((this.xCoord == p.xCoord) && (this.yCoord == p.yCoord)) {
+				return true;
+			}
+		}
+		
+		return ret;
 	}
 
 }
