@@ -16,8 +16,19 @@ public class Go {
 									// Origin is at the bottom left corner of the game board
 	
 	
+	public int getBoardHeight() { return ydim;}
+	public int getBoardWidth() { return xdim;}
+
 	/**
-	 * Place a series of stones on the board
+	 * required by codewars kata
+	 * @return
+	 */
+	public String getSize() {
+		return "{\"height\": " + ydim + ", \"width\": " + xdim + "}";
+	}
+	
+	/**
+	 * Place a series of stones on the board.  Used for initial setup, or game in progress.
 	 * @param stones		A comma delimited string of positions 1Ao,2Ao...etc
 	 */
 	private void placeStones(String stones) {
@@ -29,7 +40,21 @@ public class Go {
 			int[] ia = Go.translateCoords(s.substring(0,s.length()-1));
 			board[ia[0]][ia[1]] = piece;
 		}
-		
+	}
+	
+	public void passTurn() {
+		currentTurn = (currentTurn=='o') ? 'x' : 'o';
+	}
+	
+	
+	public void reset() {
+		currentTurn = 'o';
+		for (int y = 0; y < ydim; y++) {
+			board[y] = new char[xdim];
+			for (int x = 0; x < xdim; x++) {
+				board[y][x] = '.';
+			}
+		}
 	}
 	
 	/**
@@ -69,7 +94,7 @@ public class Go {
 		
 		if (xdim==19 && ydim == 19) {
 			if (stones > 9) { stones = 9; }
-			sa = new String[] {"Q16o","D4o","Q4o","D16o","K10o","D10o","K10o","K16o","K4o"};
+			sa = new String[] {"Q16o","D4o","Q4o","D16o","K10o","D10o","Q10o","K16o","K4o"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -149,9 +174,7 @@ public class Go {
 		return "white";
 	}
 	
-	public String getSize() {
-		return "{\"height\": " + ydim + ", \"width\": " + xdim + "}";
-	}
+
 	
 	/**
 	 * Create a new square game board
@@ -237,12 +260,7 @@ public class Go {
 		
 		board = new char[ydim][];
 		
-		for (int y = 0; y < ydim; y++) {
-			board[y] = new char[xdim];
-			for (int x = 0; x < xdim; x++) {
-				board[y][x] = '.';
-			}
-		}
+		this.reset();
 	}
 	
 	

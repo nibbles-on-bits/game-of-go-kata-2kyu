@@ -8,8 +8,76 @@ public class Group {
 	private List<Position> Positions = new ArrayList<Position>();
 	private char player;
 	
-	//private char[][] 	board;
-	//public static Group findGroup()
+	
+	// TODO : build this.
+	/**
+	 *  Given the board dimensions, determine all the liberties of this current group
+	 * @param y_dim	Height of the gameboard in play
+	 * @param x_dim Width of the gameboard in play
+	 * @return
+	 */
+	public List<Position> findGroupLiberties(Go game) {
+		
+		ArrayList<Position> liberties = new ArrayList<Position>();
+		//liberties = new ArrayList<Postion>();
+		
+		// if all neighbors are surrounded by player character, then this piece resides
+		//  inside the group and can be ignored
+		
+		
+		char[][] board = game.getBoard();
+		
+		
+		for (Position p : Positions) {
+			
+			//TODO : will want to prevent redundant liberties from being added to the list.
+			
+			// if all the neighbors are the player character, it can be ignored.  Since it resides
+			//  inside the group
+			// if the above to cases are
+			int x = p.getX();
+			int y = p.getY();
+			
+			if ((x != 0) && board[y][x-1] != player) {
+				liberties.add(p);
+				System.out.println(p.toString());
+			}
+
+			// above neighbor
+			if ((y != game.getBoardHeight()-1) && board[y+1][x] != player) {
+				liberties.add(p);
+				System.out.println(p.toString());
+				
+			}
+			
+			// Right neighbor
+			if ((x != game.getBoardWidth()-1) && board[y][x+1] != player) {
+				liberties.add(p);
+				System.out.println(p.toString());
+			}
+			
+			// Below neighbor
+			if ((y != 0) && board[y-1][x] != player) {
+				liberties.add(p);
+				System.out.println(p.toString());
+			}
+				
+		}
+		
+		return liberties;
+	}
+	
+	//TODO : come up with an algorithm to determine if all liberties of a group are occupied by the opponent pieces.
+	/*public static List<Group> findAllGroups(char[][] board) {
+		for (int y = 0; y < board.length; y++) {
+			for (int x = 0; x < y[x]; x++) {
+				Group g = Group.findGroup(y_idx, x_idx, board);
+				
+			}
+		}
+		Group[] groups = new Group[];
+	}*/
+	
 	
 	/**
 	 * Build a group of positions that are part of a position
@@ -131,6 +199,11 @@ public class Group {
 			}
 		}
 		return false;
+	}
+
+	public static Group[] findAllGroups(char[][] board) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
