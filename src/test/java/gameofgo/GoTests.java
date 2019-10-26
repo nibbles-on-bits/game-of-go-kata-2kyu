@@ -83,7 +83,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_PlacingStones_OneArg() {
+	public void test_PlacingStones_OneArg() throws Exception {
 
 		Go g = new Go(9);
 
@@ -97,7 +97,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_PlacingStones_ManyArgs() {
+	public void test_PlacingStones_ManyArgs() throws Exception {
 
 		Go g = new Go(9);
 		String[] coords = { "4A", "5A", "6A" };
@@ -107,7 +107,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_PlacingStones_StonesReproduction() {
+	public void test_PlacingStones_StonesReproduction() throws Exception {
 
 		Go g = new Go(9);
 		String[] coords = { "3D", "4D" };
@@ -167,7 +167,7 @@ public class GoTests {
 	};
 
 	@Test
-	public void test_CapturingStones() {
+	public void test_CapturingStones() throws Exception {
 
 		for (String title : VALID_CAPTURE_DATAS.keySet()) {
 			Go g = new Go(9);
@@ -178,7 +178,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_SelfCapturingNotAllowed() {
+	public void test_SelfCapturingNotAllowed() throws Exception {
 
 		Go g = null;
 		String msg = "Self capturing moves are illegal; should throw an IllegalArgumentException";
@@ -198,7 +198,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_KO_Rule_Illegal_KO_by_white() {
+	public void test_KO_Rule_Illegal_KO_by_white() throws Exception {
 
 		Go g = null;
 		String msg = "Illegal KO move. Should throw an IllegalArgumentException.";
@@ -221,17 +221,23 @@ public class GoTests {
 
 		Go g = new Go(9);
 		g.handicapStones(3);
-		char[][] board = { { '.', '.', '.', '.', '.', '.', '.', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', 'x', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', '.', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', 'x', '.', '.', '.', 'x', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', '.', '.', '.' } };
+		char[][] board = { 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', '.', '.', '.', '.', 'x', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', 'x', '.', '.', '.', 'x', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }};
 		assertArrayEquals(board, g.getBoard());
 	}
 
 	@Test
-	public void test_getSize() {
-		int h = 9, w = 16;
+	public void test_getSize() throws Exception {
+		final int h = 9;
+		final int w = 16;
 		Go g = new Go(h, w);
 		assertEquals("Should be able to get the size of the correct board", new HashMap<String, Integer>() {
 			{
@@ -242,7 +248,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_getColorTurn() {
+	public void test_getColorTurn() throws Exception {
 		Go g = new Go(9);
 		g.move("3B");
 		assertEquals("Should be able to get the color of the current turn", "white", g.getTurn());
@@ -251,14 +257,19 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_rollBack() {
+	public void test_rollBack() throws Exception {
 		Go g = new Go(9);
 		g.move("3B", "2B", "1B");
-		char[][] board = { { '.', '.', '.', '.', '.', '.', '.', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', '.', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', '.', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', '.', '.', '.' },
-				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, { '.', '.', '.', '.', '.', '.', '.', '.', '.' } };
+		char[][] board = { 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' },
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' }, 
+				{ '.', '.', '.', '.', '.', '.', '.', '.', '.' } };
 
 		g.rollBack(3);
 		assertArrayEquals("Should be able to rollback 3 turns", board, g.getBoard());
@@ -274,7 +285,7 @@ public class GoTests {
 	}
 
 	@Test
-	public void test_ResetBoard() {
+	public void test_ResetBoard() throws Exception {
 		Go g = new Go(9);
 		g.move("3B", "2B", "1B");
 		g.reset();

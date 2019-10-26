@@ -1,8 +1,6 @@
 package gameofgo;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Go {
 	
@@ -22,6 +20,26 @@ public class Go {
 	
 	public int getBoardHeight() { return ydim;}
 	public int getBoardWidth() { return xdim;}
+	
+	/**
+	 * Return the game to a previous state
+	 * @param i
+	 * @throws Exception 
+	 */
+	public void rollBack(int i) throws Exception {
+		// TODO : make exception more descriptive
+		if (i > boardStack.size() || i < 1) throw new Exception ("can't roll back that far");
+
+		if (i % 2 == 1) { currentTurn = currentTurn=='o' ? 'x' : 'o'; }
+		int idx = boardStack.size() -i;
+		this.board = boardStack.get(idx);
+		
+		for (int x = 0; x < i; x++) {
+			boardStack.remove(boardStack.size()-1);
+		}
+		
+		
+	}
 	
 	/**
 	 * Make a snapshot of the current board, used to detect KO's
@@ -51,7 +69,7 @@ public class Go {
 				boardCopy[y][x] = this.board[y][x];
 			}
 		}
-		
+		this.boardStack.add(boardCopy);
 	}
 	
 	private static boolean boardsAreSame(char[][] board_a, char[][]board_b) {
@@ -260,7 +278,7 @@ public class Go {
 		
 		if (xdim==9 && ydim == 9) {
 			if (stones > 5) { stones = 5; }
-			sa = new String[] {"G7o","C3o","G3o","C7o","E5o"};
+			sa = new String[] {"7Go","3Co","3Go","7Co","5Eo"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -268,7 +286,8 @@ public class Go {
 		
 		if (xdim==13 && ydim == 13) {
 			if (stones > 9) { stones = 9; }
-			sa = new String[] {"K10o","D4o","K4o","D10o","G7o","D7o","K7o","G10o","G4o"};
+			sa = new String[] {"10Ko","4Do","4Ko","10Do","7Go","7Do","7Ko","10Go","4Go"};
+			//sa = new String[] {"K10o","D4o","K4o","D10o","G7o","D7o","K7o","G10o","G4o"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -276,7 +295,8 @@ public class Go {
 		
 		if (xdim==19 && ydim == 19) {
 			if (stones > 9) { stones = 9; }
-			sa = new String[] {"Q16o","D4o","Q4o","D16o","K10o","D10o","Q10o","K16o","K4o"};
+			//sa = new String[] {"Q16o","D4o","Q4o","D16o","K10o","D10o","Q10o","K16o","K4o"};
+			sa = new String[] {"16Qo","4Do","4Qo","16Do","10Ko","10Do","10Qo","16Ko","4Ko"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -366,10 +386,15 @@ public class Go {
 	 * @param gameCoords
 	 * @throws Exception 
 	 */
-	public Go(int dimension) throws Exception {
+	public Go(int dimension) throws IllegalArgumentException {
 		if (dimension <= 4) {
-			throw new Exception("board dimension must be > 4");
+			throw new IllegalArgumentException("board dimension must be > 4");
 		}
+		
+		if (dimension > 19) {
+			throw new IllegalArgumentException("board dimension must be < 19");
+		}
+		
 		this.ydim = dimension;
 		this.xdim = dimension;
 		board = new char[dimension][];
@@ -524,7 +549,7 @@ public class Go {
 	 * @throws Exception
 	 */
 	public void move(String gameCoords) throws Exception {
-		System.out.println("move() called.  gameCoords=" + gameCoords);
+		//System.out.println("move() called.  gameCoords=" + gameCoords);
 		gameCoords = gameCoords.toUpperCase().trim();
 		
 		// check to see if gameCoords are valid, it should be a 2-3 character string
@@ -560,9 +585,9 @@ public class Go {
 		
 		// detect captures here
 		
-		System.out.printf("move() letStr = %s  numStr = %s\n", letStr, numStr);
-		System.out.printf("x = %d  y = %d \n\n", x, y);
-		System.out.println("move() called.  gameCoords=" + gameCoords);
+		//System.out.printf("move() letStr = %s  numStr = %s\n", letStr, numStr);
+		//System.out.printf("x = %d  y = %d \n\n", x, y);
+		//System.out.println("move() called.  gameCoords=" + gameCoords);
 		
 		saveBoardToPrevious();		// take a snapshot
 		copyBoardToStack();
@@ -570,5 +595,8 @@ public class Go {
 		currentTurn = (currentTurn == 'o') ? 'x' : 'o';
 
 	}
+	
+	
+	
 
 }

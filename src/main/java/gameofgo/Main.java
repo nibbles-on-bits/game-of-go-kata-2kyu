@@ -8,8 +8,19 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
+		////////////// test rollback
+		Go game = new Go(9);
+		game.move("1A");
+		game.move("3C");
+		game.move("5D");
+		game.printBoard();
+		game.rollBack(1);
+		game.printBoard();
+		
+		
+		
 		////////////// test KO
-		String testBoard = 
+		/*String testBoard = 
 				". . o . o x . . ." + "\n" +
 				". . . o x . . . ." + "\n" +
 				". . . . . . . . ." + "\n" +
@@ -22,7 +33,7 @@ public class Main {
 		Go game = new Go(testBoard,'x');
 		game.printBoard();
 		game.move("9D");
-		System.out.println();
+		System.out.println();*/
 		
 		
 		/*
