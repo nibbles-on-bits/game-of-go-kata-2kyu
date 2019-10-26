@@ -15,9 +15,59 @@ public class Go {
 	private char[][] 	board;		// first dimension is up/down  second dimension is left right
 									// Origin is at the bottom left corner of the game board
 	
+	private char[][]		previousBoard;	// What did the board look like previously?
+	private List<char[][]> 	boardStack = new ArrayList<char[][]>();
+	
+	
 	
 	public int getBoardHeight() { return ydim;}
 	public int getBoardWidth() { return xdim;}
+	
+	/**
+	 * Make a snapshot of the current board, used to detect KO's
+	 */
+	private void saveBoardToPrevious() {
+		if (previousBoard == null) {
+			previousBoard = new char[this.ydim][this.xdim];
+		}
+		
+		for (int y = 0; y < ydim; y++) {
+			for (int x = 0; x < xdim; x++) {
+				this.previousBoard[y][x] = this.board[y][x];
+			}
+		}
+	}
+	
+	/**
+	 * Create a new char[][] object to hold a copy of the current board and add it
+	 *  to boardStack.
+	 * @return 
+	 */
+	private void copyBoardToStack() {
+		char[][] boardCopy = new char[ydim][xdim];
+		
+		for (int y = 0; y < ydim; y++) {
+			for (int x = 0; x < xdim; x++) {
+				boardCopy[y][x] = this.board[y][x];
+			}
+		}
+		
+	}
+	
+	private static boolean boardsAreSame(char[][] board_a, char[][]board_b) {
+		if (board_a == null || board_b == null) return false;
+		int ydim_a = board_a.length;
+		int ydim_b = board_b.length;
+		int xdim_a = board_a[0].length;
+		int xdim_b = board_a[0].length;
+		if ((ydim_a != ydim_b) || (xdim_a != xdim_b)) { return false; }
+		for (int y = 0; y < ydim_a; y++) {
+			for (int x = 0; x < xdim_a; x++) {
+				if (board_a[y][x] != board_b[y][x]) return false;
+			}
+		}
+		return true;
+	}
 	
 	
 	
@@ -54,9 +104,6 @@ public class Go {
 				this.board[y][x] = sa[ydim-1-y].charAt(x*2);
 			}
 		}
-		
-		
-		
 	}
 	
 	/**
@@ -85,6 +132,26 @@ public class Go {
 		
 	}
 	
+	
+	/**
+	 * Determine if a move would cause OK
+	 * @param y
+	 * @param x
+	 * @param player
+	 * @return
+	 */
+	public boolean wouldMoveCauseKO(int y, int x, char player) {
+		boolean ret = false;
+		char[][] nextBoard = new char[ydim][xdim];
+		for (int yy = 0; yy < ydim; yy++) {	
+			for (int xx = 0; xx < xdim; xx++) {
+				nextBoard[yy][xx] = this.board[yy][xx];
+			}
+		}
+		nextBoard[y][x] = player;
+		
+		return this.boardsAreSame(nextBoard, previousBoard);
+	}
 	
 	/**
 	 * Determine if a desired move would create a self capture situation.
@@ -416,8 +483,6 @@ public class Go {
 	 * @throws Exception
 	 */
 	public void move(String gameCoords) throws Exception{
-		
-		
 		System.out.println("move() called.  gameCoords=" + gameCoords);
 		gameCoords = gameCoords.toUpperCase().trim();
 		
@@ -444,6 +509,10 @@ public class Go {
 			throw new Exception ("y must be between 0 and " + (this.ydim-1));
 		}
 		
+		if (this.wouldMoveCauseKO(y, x, currentTurn)) {
+			throw new IllegalArgumentException("Move would cause KO.");
+		}
+		
 		if (this.wouldMoveCauseSelfCapture(y, x, currentTurn)) {
 			throw new IllegalArgumentException("Move would cause self capture.");
 		}
@@ -454,10 +523,10 @@ public class Go {
 		System.out.printf("x = %d  y = %d \n\n", x, y);
 		System.out.println("move() called.  gameCoords=" + gameCoords);
 		
+		saveBoardToPrevious();		// take a snapshot
 		this.board[y][x] = currentTurn;
 		currentTurn = (currentTurn == 'o') ? 'x' : 'o';
 
 	}
-	
 
 }

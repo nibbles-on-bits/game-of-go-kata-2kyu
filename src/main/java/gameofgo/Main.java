@@ -8,6 +8,24 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
+		////////////// test KO
+		String testBoard = 
+				". . o . o x . . ." + "\n" +
+				". . . o x . . . ." + "\n" +
+				". . . . . . . . ." + "\n" +
+				". . . . . . . . ." + "\n" +
+				". . . . . . . . ." + "\n" +
+				". . . . . . . . ." + "\n" +
+				". . . . . . . . ." + "\n" +
+				". . . . . . . . ." + "\n" +
+				". . . . . . . . .";
+		Go game = new Go(testBoard,'x');
+		game.printBoard();
+		game.move("9D");
+		System.out.println();
+		
+		
+		/*
 		String testBoard = 
 				". x o o o o o . ." + "\n" +
 				". x o o o o o x ." + "\n" +
@@ -27,6 +45,7 @@ public class Main {
 		game.printBoard();
 		Group.clearCapturedGroups(game.getBoard());
 		game.printBoard();
+		*/
 		
 		
 		
