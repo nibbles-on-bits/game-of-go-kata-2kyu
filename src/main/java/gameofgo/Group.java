@@ -24,15 +24,55 @@ public class Group {
 	 * @param game
 	 * @return
 	 */
-	public boolean isCaptured(Go game) {
-		char opponent = (player=='o' ? 'x' : 'o');
-		List<Position> liberties = findGroupLiberties(game);
+	public boolean isCaptured(char[][] board) {
 		
-		for (Position p : liberties) {
-			if (game.getPositionValue(p) != opponent) return false;
+		char opponent = (player=='o' ? 'x' : 'o');
+		List<Position> liberties = findGroupLiberties(board);
+		
+		// only captured when all liberties are occupied by the opponent
+		for (Position p : liberties) {	
+			if (board[p.getY()][p.getX()] != opponent) return false;
 		}
 		
 		return true;
+	}
+	
+	
+	/**
+	 * Clear any captured positions on the board.
+	 * @param board
+	 */
+	public static void clearCapturedGroups(char[][] board) {
+		ArrayList<Group> capturedGroups = new ArrayList<Group>();
+		
+		for (Group g : findAllGroups(board)) {
+			if (g.isCaptured(board)) {
+				capturedGroups.add(g);
+			}
+		}
+		
+		for (Group cg : capturedGroups) {
+			for (Position p : cg.Positions) {
+				board[p.getY()][p.getX()] = '.';
+			}
+		}
+		
+	}
+	
+	/**
+	 * Search the entire board for any groups that have been captured.
+	 * 
+	 */
+	public static List<Group> findCapturedGroups(char[][] board) {
+		ArrayList<Group> capturedGroups = new ArrayList<Group>();
+		
+		for (Group g : findAllGroups(board)) {
+			if (g.isCaptured(board)) {
+				capturedGroups.add(g);
+			}
+		}
+		
+		return capturedGroups;
 	}
 	
 	
@@ -44,17 +84,14 @@ public class Group {
 	 * @param x_dim Width of the gameboard in play
 	 * @return
 	 */
-	public List<Position> findGroupLiberties(Go game) {
+	public List<Position> findGroupLiberties(char[][] board) {
+		int boardHeight = board.length;
+		int boardWidth = board[0].length;
 		
 		ArrayList<Position> liberties = new ArrayList<Position>();
-		//liberties = new ArrayList<Postion>();
 		
 		// if all neighbors are surrounded by player character, then this piece resides
 		//  inside the group and can be ignored
-		
-		
-		char[][] board = game.getBoard();
-		
 		
 		for (Position p : Positions) {
 			
@@ -66,6 +103,7 @@ public class Group {
 			int x = p.getX();
 			int y = p.getY();
 			
+			// left neighbor
 			if ((x != 0) && board[y][x-1] != player) {
 				Position lp = new Position(y,x-1);
 				if (!lp.isInPositionList(liberties)) 
@@ -73,21 +111,21 @@ public class Group {
 			}
 
 			// above neighbor
-			if ((y != game.getBoardHeight()-1) && board[y+1][x] != player) {
+			if ((y != boardHeight-1) && board[y+1][x] != player) {
 				Position lp = new Position(y+1,x);
 				if (!lp.isInPositionList(liberties))
 					liberties.add(lp);
 				
 			}
 			
-			// Right neighbor
-			if ((x != game.getBoardWidth()-1) && board[y][x+1] != player) {
+			// right neighbor
+			if ((x != boardWidth-1) && board[y][x+1] != player) {
 				Position lp = new Position(y,x+1);
 				if (!lp.isInPositionList(liberties))
 					liberties.add(lp);
 			}
 			
-			// Below neighbor
+			// below neighbor
 			if ((y != 0) && board[y-1][x] != player) {
 				Position lp = new Position(y-1,x);
 				if (!lp.isInPositionList(liberties))
@@ -139,6 +177,8 @@ public class Group {
 		
 		return groups;
 	}
+	
+	
 	
 	/**
 	 * Build a group of positions that are part of a position

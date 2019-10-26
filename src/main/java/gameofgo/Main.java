@@ -6,10 +6,100 @@ import org.junit.Test;
 
 public class Main {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		
+		String testBoard = 
+				". x o o o o o . ." + "\n" +
+				". x o o o o o x ." + "\n" +
+				". . x o o o x . ." + "\n" +
+				". . . x o o x . ." + "\n" +
+				". . x . x x . . ." + "\n" +
+				". . . . . . . o ." + "\n" +
+				". . x . . . . . ." + "\n" +
+				". . . x . . o . ." + "\n" +
+				". . . . . . . . .";
+		
+		Go game = new Go(testBoard,'x');
+		game.printBoard();
+		game.move("9H");
+		System.out.println();
+		System.out.println();
+		game.printBoard();
+		Group.clearCapturedGroups(game.getBoard());
+		game.printBoard();
+		
+		
+		
+		
+		
+		///////////////////// Test findCapturedGroups ////////////////////////
+		/*Go game = null;
+		String positions = "2Ax,1Bx,1Ao";		// captured o
+		game = new Go(positions, 8, 8, 'x');
+		List<Group> capturedGroups = Group.findCapturedGroups(game.getBoard());
+		
+		System.out.println("\n\nCaptured Groups");
+		for (Group cg : capturedGroups) {
+			cg.print();
+		}
+		
+		System.out.println("Before clearing captured groups");
+		game.printBoard();
+		
+		Group.clearCapturedGroups(game.getBoard());
+		
+		System.out.println("\n\nAfter clearing captured groups");
+		game.printBoard();
+		*/
+		
+		
+		
+		
+		/////////////////// Test for capture ////////////////////////////////
+		/*Go game = null;
+		String positions = "2Ax,1Ao";
+		game = new Go(positions, 8, 8, 'o');
+		try {
+			game.move("1B");
+		} catch (IllegalArgumentException iae) {
+			System.out.println("IllegalArgumentException : " + iae.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		
+		
+		//////////////////////Test for self capture //////////////////
+		/*Go game = null;
+		String positions = "2Ax,1Bx";
+		game = new Go(positions, 8, 8, 'o');
+		try {
+			game.move("1A");
+		} catch (IllegalArgumentException iae) {
+			System.out.println("IllegalArgumentException : " + iae.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		//////////////////////// Test for self capture //////////////////
+		/*Go game = null;
+		String positions = "2Ax,1Bx";
+		game = new Go(positions,8,8,'o');
+		if (game.wouldMoveCauseSelfCapture(0, 0, 'o')) {
+			System.out.println("WOULD CAUSE SELF CAPTURE!");
+		} else {
+			System.out.println("Would not cause self capture");
+		}*/
+		
+		//wouldMoveCauseSelfCapture()
+		
+		
+		
 		
 		/////////////////////////// Find all groups //////////////////////
-		
+		/*
 		Go game = null;
 		String positions = "1Ax,1Bx,1Fo,2Bo,2Co,2Dx,3Ax,3Bo,3Dx,3Ex,4Bx,4Do,4Ex,4Fo,5Bx,5Eo";
 		//String positions = "1Ax,1Bx,1Fo,2Bo";
@@ -21,9 +111,8 @@ public class Main {
 		for (Group g : groups) {
 			g.print();
 		}
+		*/
 		
-		
-
 		
 		/////////////////// captured test 1 /////////////////////
 		/*

@@ -19,6 +19,93 @@ public class Go {
 	public int getBoardHeight() { return ydim;}
 	public int getBoardWidth() { return xdim;}
 	
+	
+	
+	/**
+	 * Create a game in progress based off a visual representation of the game board
+	 * 
+	 * @param board A visual representation of the board, each row separated by \n
+	 * ie :
+	 * 
+	 * String testBoard = 
+				". x o o o o o . ." + "\n" +
+				". x o o o o o x ." + "\n" +
+				". . x o o o x . ." + "\n" +
+				". . . x o o x . ." + "\n" +
+				". . x . x x . . ." + "\n" +
+				". . . . . . . o ." + "\n" +
+				". . x . . . . . ." + "\n" +
+				". . . x . . o . ." + "\n" +
+				". . . . . . . . .";
+				
+	 * @param turn Who gets the next turn? o or x?
+	 */
+	public Go(String board, char turn) {
+		this.currentTurn = turn;
+		String[] sa = board.split("\n");
+		
+		// TODO : consider striping out any white spaces in each line
+		ydim = sa.length;
+		xdim = (sa[0].length()+1)/2;
+		
+		this.board = new char[ydim][xdim];
+		for (int y = 0; y < ydim; y++) {
+			for (int x = 0; x < xdim; x++) {
+				this.board[y][x] = sa[ydim-1-y].charAt(x*2);
+			}
+		}
+		
+		
+		
+	}
+	
+	/**
+	 * Determine if a particular move would capture an opponentGroup
+	 * @param y
+	 * @param x
+	 * @param player
+	 * @return
+	 */
+	public boolean wouldMoveCaptureGroup(int y, int x, char player) {
+		boolean ret = false;
+		char[][] nextBoard = new char[ydim][xdim];
+		for (int yy = 0; yy < ydim; yy++) {	
+			for (int xx = 0; xx < xdim; xx++) {
+				nextBoard[yy][xx] = this.board[yy][xx];
+			}
+		}
+		nextBoard[y][x] = player;
+		
+		
+		// Now check all the adjacent positions around the desired move and 
+		// if any of those belong to the opponent, see if they are a part of a group
+		// that is captured.
+		
+		return ret;
+		
+	}
+	
+	
+	/**
+	 * Determine if a desired move would create a self capture situation.
+	 * @param y
+	 * @param x
+	 * @param player
+	 * @return
+	 */
+	public boolean wouldMoveCauseSelfCapture(int y, int x, char player) {
+		boolean ret = false;
+		char[][] nextBoard = new char[ydim][xdim];
+		for (int yy = 0; yy < ydim; yy++) {	
+			for (int xx = 0; xx < xdim; xx++) {
+				nextBoard[yy][xx] = this.board[yy][xx];
+			}
+		}
+		nextBoard[y][x] = player;
+		
+		return Group.findGroup(y, x, nextBoard).isCaptured(board);
+	}
+	
 	public char getPositionValue(Position p) {
 		return board[p.getY()][p.getX()];
 	}
@@ -186,6 +273,9 @@ public class Go {
 	}
 	
 
+	/**
+	 * Create a 
+	 */
 	
 	/**
 	 * Create a new square game board
@@ -209,6 +299,7 @@ public class Go {
 	}
 	
 	
+
 	
 	/**
 	 * Create a game in progress
@@ -319,12 +410,16 @@ public class Go {
 		return board;
 	}
 	
+	/**
+	 * Have the current player make a move
+	 * @param gameCoords
+	 * @throws Exception
+	 */
 	public void move(String gameCoords) throws Exception{
+		
+		
 		System.out.println("move() called.  gameCoords=" + gameCoords);
 		gameCoords = gameCoords.toUpperCase().trim();
-		
-		//TODO : add some checking of gameCoords here
-		
 		
 		// check to see if gameCoords are valid, it should be a 2-3 character string
 		// in the format of (1-2digit number) + 1 cap character
@@ -333,6 +428,10 @@ public class Go {
 		String numStr = gameCoords.substring(0,gameCoords.length()-1);
 		// convert to x/y coords
 		int y = Integer.parseInt(numStr) - 1;
+		
+		// make sure that this move wont cause a self capture
+		
+		
 		
 		String header = "ABCDEFGHJKLMNOPQRST";
 		int x = header.indexOf(letStr);
@@ -344,6 +443,12 @@ public class Go {
 		if ((y < 0 ) || (y >= this.ydim)) {
 			throw new Exception ("y must be between 0 and " + (this.ydim-1));
 		}
+		
+		if (this.wouldMoveCauseSelfCapture(y, x, currentTurn)) {
+			throw new IllegalArgumentException("Move would cause self capture.");
+		}
+		
+		// detect captures here
 		
 		System.out.printf("move() letStr = %s  numStr = %s\n", letStr, numStr);
 		System.out.printf("x = %d  y = %d \n\n", x, y);
