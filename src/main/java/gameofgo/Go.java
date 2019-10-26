@@ -173,6 +173,23 @@ public class Go {
 		return Group.findGroup(y, x, nextBoard).isCaptured(board);
 	}
 	
+	/**
+	 * Required by codewars kata
+	 * @return returns the value at a given coordinate in the 1A format
+	 */
+	public char getPosition(String p) {
+		int[] ret = new int[2]; 
+	
+		p = p.trim();
+		String l = p.substring(1);
+		String n = p.substring(0,1);
+
+		int y = Integer.parseInt(n)-1;
+		int x = "ABCDEFGHJKLMNOPQRST".indexOf(l);
+		
+		return board[y][x];
+	}
+	
 	public char getPositionValue(Position p) {
 		return board[p.getY()][p.getX()];
 	}
@@ -477,12 +494,36 @@ public class Go {
 		return board;
 	}
 	
+	
+	/**
+	 * Make a series of moves
+	 * required by Codewars Kata
+	 * @param moves
+	 */
+	public void move(String... moves) throws Exception {
+		for (String move : moves) {
+			move(move);
+		}
+		
+	}
+	
+	/**
+	 * Make a series of moves based of a variadic parameter
+	 *  required by Codewars Kata
+	 * @param moves
+	 * @throws Exception
+	 */
+	//public void move(String... moves) throws Exception {
+		
+		
+	//}
+	
 	/**
 	 * Have the current player make a move
 	 * @param gameCoords
 	 * @throws Exception
 	 */
-	public void move(String gameCoords) throws Exception{
+	public void move(String gameCoords) throws Exception {
 		System.out.println("move() called.  gameCoords=" + gameCoords);
 		gameCoords = gameCoords.toUpperCase().trim();
 		
@@ -524,6 +565,7 @@ public class Go {
 		System.out.println("move() called.  gameCoords=" + gameCoords);
 		
 		saveBoardToPrevious();		// take a snapshot
+		copyBoardToStack();
 		this.board[y][x] = currentTurn;
 		currentTurn = (currentTurn == 'o') ? 'x' : 'o';
 
