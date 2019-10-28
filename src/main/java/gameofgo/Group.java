@@ -105,33 +105,31 @@ public class Group {
 			
 			// left neighbor
 			if ((x != 0) && board[y][x-1] != player) {
-				Position lp = new Position(y,x-1);
+				Position lp = new Position(y, x-1, boardHeight);
 				if (!lp.isInPositionList(liberties)) 
 					liberties.add(lp);
 			}
 
 			// above neighbor
-			if ((y != boardHeight-1) && board[y+1][x] != player) {
-				Position lp = new Position(y+1,x);
+			if ((y != 0) && board[y-1][x] != player) {
+				Position lp = new Position(y-1, x, boardHeight);
 				if (!lp.isInPositionList(liberties))
 					liberties.add(lp);
-				
 			}
 			
 			// right neighbor
 			if ((x != boardWidth-1) && board[y][x+1] != player) {
-				Position lp = new Position(y,x+1);
+				Position lp = new Position(y, x+1, boardHeight);
 				if (!lp.isInPositionList(liberties))
 					liberties.add(lp);
 			}
 			
 			// below neighbor
-			if ((y != 0) && board[y-1][x] != player) {
-				Position lp = new Position(y-1,x);
+			if ((y != boardHeight-1) && board[y+1][x] != player) {
+				Position lp = new Position(y+1, x, boardHeight);
 				if (!lp.isInPositionList(liberties))
-					liberties.add(lp);
+					liberties.add(lp);				
 			}
-				
 		}
 		
 		for (Position lp : liberties) {
@@ -170,8 +168,7 @@ public class Group {
 					Group g = findGroup(y,x,board);
 					if (g != null) groups.add(g);
 				}
-			
-				
+
 			}
 		}
 		
@@ -199,7 +196,7 @@ public class Group {
 		
 		int ptr = 0; 
 		Group group = new Group(board[y_idx][x_idx]);
-		group.addPosition(new Position(y_idx, x_idx));
+		group.addPosition(new Position(y_idx, x_idx, ydim));
 		
 		
 	
@@ -210,26 +207,24 @@ public class Group {
 			
 			// if there is a left neighbor and it has the same value
 			if ((x_idx != 0) && board[y_idx][x_idx-1] == player) {
-				group.addPosition(y_idx, x_idx-1);
-				//Go.addPositionToGroup(y_idx, x_idx-1, group);
+				group.addPosition(y_idx, x_idx-1, ydim);
 			}
 			
 			// if there is a above neighbor and it has the same value
-			if ((y_idx != ydim-1) && board[y_idx+1][x_idx] == player) {
-				group.addPosition(y_idx+1, x_idx);
-				//Go.addPositionToGroup(y_idx+1, x_idx, group);
+			if ((y_idx != 0) && board[y_idx-1][x_idx] == player) {
+				group.addPosition(y_idx-1, x_idx, ydim);
 			}
+			
 			
 			// if there is a right neighbor and it has the same value
 			if ((x_idx != xdim-1) && board[y_idx][x_idx+1] == player) {
-				group.addPosition(y_idx,x_idx+1);
-				//Go.addPositionToGroup(y_idx, x_idx+1, group);
+				group.addPosition(y_idx,x_idx+1, ydim);
 			}
 			
 			// if there is a below neighbor and it has the same value
-			if ((y_idx != 0) && board[y_idx-1][x_idx] == player) {
-				group.addPosition(y_idx-1, x_idx);
-				//Go.addPositionToGroup(y_idx-1, x_idx, group);
+			if ((y_idx != ydim-1) && board[y_idx+1][x_idx] == player) {
+				group.addPosition(y_idx+1, x_idx, ydim);
+				//Go.addPositionToGroup(y_idx+1, x_idx, group);
 			}
 			
 			// we are done if the ptr is at the end of the list and all neighbors with same value have been added
@@ -263,13 +258,13 @@ public class Group {
 		Positions.add(p);
 	}
 	
-	public void addPosition(int y_idx, int x_idx) {
+	public void addPosition(int y_idx, int x_idx, int boardHeight) {
 		for (Position p: Positions) {
 			if ((p.getX()==x_idx) && (p.getY() == y_idx)) {
 				return;
 			}
 		}
-		Positions.add(new Position(y_idx, x_idx));
+		Positions.add(new Position(y_idx, x_idx, boardHeight));
 	}
 	
 	
@@ -278,8 +273,8 @@ public class Group {
 	 * @param position	in the form of A1
 	 * @return true if position is part of this group
 	 */
-	public boolean containsPosition(String position) {
-		int[] pos = Go.translateCoords(position);
+	public boolean containsPosition(String position, int boardHeight) {
+		int[] pos = Go.translateCoords(position, boardHeight);
 		return this.containsPosition(pos[0], pos[1]);
 		
 	}

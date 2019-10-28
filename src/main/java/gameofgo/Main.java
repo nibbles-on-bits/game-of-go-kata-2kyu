@@ -8,14 +8,25 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
+		// Test Position
+		//Position p = new Position(0,0,9);
+		//System.out.println();
+		
+		// Test self-capture
+		/*Go g= new Go(9);
+		g.move("4H", "8A", "8B", "9B");
+		g.printBoard();
+		g.move("9A");*/
+
+		
 		////////////// test rollback
-		Go game = new Go(9);
+		/*Go game = new Go(9);
 		game.move("1A");
 		game.move("3C");
 		game.move("5D");
 		game.printBoard();
 		game.rollBack(1);
-		game.printBoard();
+		game.printBoard();*/
 		
 		
 		

@@ -1,13 +1,14 @@
 package gameofgo;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Go {
 	
 	public static enum IllegalMoves{ SELFCAPTURING, OUTOFBOUNDS, SPACEOCCUPIED, KO};
 	
-	 // o-black stone  x -white stone
-	private char 		currentTurn = 'o';	// black goes first
+	 // x-black stone  o-white stone
+	private char 		currentTurn = 'x';	// black goes first
 	private int 		xdim = 0;
 	private int 		ydim = 0;
 	private char[][] 	board;		// first dimension is up/down  second dimension is left right
@@ -15,8 +16,6 @@ public class Go {
 	
 	private char[][]		previousBoard;	// What did the board look like previously?
 	private List<char[][]> 	boardStack = new ArrayList<char[][]>();
-	
-	
 	
 	public int getBoardHeight() { return ydim;}
 	public int getBoardWidth() { return xdim;}
@@ -159,7 +158,6 @@ public class Go {
 	 * @return
 	 */
 	public boolean wouldMoveCauseKO(int y, int x, char player) {
-		boolean ret = false;
 		char[][] nextBoard = new char[ydim][xdim];
 		for (int yy = 0; yy < ydim; yy++) {	
 			for (int xx = 0; xx < xdim; xx++) {
@@ -200,9 +198,9 @@ public class Go {
 	
 		p = p.trim();
 		String l = p.substring(1);
-		String n = p.substring(0,1);
+		String n = (p.substring(0,1));
 
-		int y = Integer.parseInt(n)-1;
+		int y = this.ydim-Integer.parseInt(n);
 		int x = "ABCDEFGHJKLMNOPQRST".indexOf(l);
 		
 		return board[y][x];
@@ -216,8 +214,11 @@ public class Go {
 	 * required by codewars kata
 	 * @return
 	 */
-	public String getSize() {
-		return "{\"height\": " + ydim + ", \"width\": " + xdim + "}";
+	public HashMap<String, Integer> getSize() {
+		HashMap<String,Integer> ret = new HashMap<String, Integer>();
+		ret.put("height", ydim);
+		ret.put("width", xdim);
+		return ret;
 	}
 	
 	/**
@@ -230,7 +231,7 @@ public class Go {
 		for (String s : sa) {
 			System.out.println(s);
 			char piece = s.charAt(s.length()-1);
-			int[] ia = Go.translateCoords(s.substring(0,s.length()-1));
+			int[] ia = Go.translateCoords(s.substring(0,s.length()-1), this.ydim);
 			board[ia[0]][ia[1]] = piece;
 		}
 	}
@@ -248,7 +249,7 @@ public class Go {
 	 * Clear the board and reset the player to black ('o')
 	 */
 	public void reset() {
-		currentTurn = 'o';
+		currentTurn = 'x';
 		for (int y = 0; y < ydim; y++) {
 			board[y] = new char[xdim];
 			for (int x = 0; x < xdim; x++) {
@@ -262,11 +263,11 @@ public class Go {
 	 * for 9x9 boards, up to 5 stones
 	 * for 13x13 boards, up to 9 stones
 	 * for 19x19 boards, up to 9 stones
-	 * 9x9		G7,C3,G3,C7,E5
-	 * 13x13	J10,D4,J4,D10,G7,D7,J7,G10
-	 * 19x19	Q16,D4,Q4,D16,K10,D10,Q10,K16,K4
+	 * 9x9		7G,3C,3G,7C,5E
+	 * 13x13	10J,4D,4J,10D,7G,7D,7J,10G
+	 * 19x19	16Q,4D,4Q,16D,10K,10D,10Q,16K,4K
 	 * 
-	 * @param stones
+	 * @param stones	The number of handicap stones to place
 	 */
 	public void handicapStones(int stones) {
 		if (stones < 1) return;
@@ -278,7 +279,7 @@ public class Go {
 		
 		if (xdim==9 && ydim == 9) {
 			if (stones > 5) { stones = 5; }
-			sa = new String[] {"7Go","3Co","3Go","7Co","5Eo"};
+			sa = new String[] {"7Gx","3Cx","3Gx","7Cx","5Ex"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -286,8 +287,7 @@ public class Go {
 		
 		if (xdim==13 && ydim == 13) {
 			if (stones > 9) { stones = 9; }
-			sa = new String[] {"10Ko","4Do","4Ko","10Do","7Go","7Do","7Ko","10Go","4Go"};
-			//sa = new String[] {"K10o","D4o","K4o","D10o","G7o","D7o","K7o","G10o","G4o"};
+			sa = new String[] {"10Kx","4Dx","4Kx","10Dx","7Gx","7Dx","7Kx","10Gx","4Gx"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -295,8 +295,7 @@ public class Go {
 		
 		if (xdim==19 && ydim == 19) {
 			if (stones > 9) { stones = 9; }
-			//sa = new String[] {"Q16o","D4o","Q4o","D16o","K10o","D10o","Q10o","K16o","K4o"};
-			sa = new String[] {"16Qo","4Do","4Qo","16Do","10Ko","10Do","10Qo","16Ko","4Ko"};
+			sa = new String[] {"16Qx","4Dx","4Qx","16Dx","10Kx","10Dx","10Qx","16Kx","4Kx"};
 			for (int i = 0; i < stones; i++) {
 				this.placeStones(sa[i]);
 			}
@@ -309,9 +308,9 @@ public class Go {
 	 * @param x
 	 * @return
 	 */
-	public static String translateCoords(int y, int x) {
-		String l = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(x));
-		String n = Integer.toString(y+1);
+	public static String translateCoords(int y, int x, int boardHeight) {
+		String l = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(boardHeight-1-x));
+		String n = Integer.toString(+1);
 		return n + l;
 	}
 	
@@ -320,14 +319,14 @@ public class Go {
 	 * @param cords ex: 1A or 15J
 	 * @return array of y,x index positions on board.  
 	 */
-	public static int[] translateCoords(String cords) {
+	public static int[] translateCoords(String cords, int boardHeight) {
 		int[] ret = new int[2]; 
 		
-		cords = cords.trim();
+ 		cords = cords.trim();
 		String l = cords.substring(1);
 		String n = cords.substring(0,1);
 
-		ret[0] = Integer.parseInt(n)-1;
+		ret[0] = boardHeight - Integer.parseInt(n);
 		ret[1] = "ABCDEFGHJKLMNOPQRST".indexOf(l);
 		
 		return ret;
@@ -348,20 +347,18 @@ public class Go {
 			for (int x = 0; x < xdim-1; x++) {
 				char thisChar = this.board[y][x];
 				if (thisChar == '.') continue;
-				
 				// First see if this already belongs to a group, if not then create a new group
-				
 				char aboveChar = board[y+1][x];
 				char rightChar = board[y][x+1];
 				
 				System.out.printf("y=%d  x=%d\n",y,x);
 				if (thisChar == aboveChar) {
 					// AddEdge(y,x,y+1,x)
-					System.out.println(translateCoords(y,x) + " - " + translateCoords(y+1,x));
+					System.out.println(translateCoords(y, x, this.ydim) + " - " + translateCoords(y+1, x, this.ydim));
 				}
 				
 				if (thisChar == rightChar) {
-					System.out.println(translateCoords(y,x) + " - " + translateCoords(y,x+1));
+					System.out.println(translateCoords(y, x, this.ydim) + " - " + translateCoords(y, x+1, this.ydim));
 				}
 			}
 			
@@ -372,14 +369,10 @@ public class Go {
 	}
 	
 	public String getTurn() {
-		if (currentTurn == 'o') return "black";
+		if (currentTurn == 'x') return "black";
 		return "white";
 	}
 	
-
-	/**
-	 * Create a 
-	 */
 	
 	/**
 	 * Create a new square game board
@@ -406,8 +399,6 @@ public class Go {
 		}
 		
 	}
-	
-	
 
 	
 	/**
@@ -430,9 +421,6 @@ public class Go {
 		}
 		
 		this.placeStones(positions);
-			
-		
-		
 	}
 	
 	/**
@@ -470,7 +458,7 @@ public class Go {
 	}
 	
 	/**
-	 * Create a rectangular game board.  Origin is bottom left of board
+	 * Create a rectangular game board.  Origin (0,0) is top left of board
 	 * @param ydim
 	 * @param xdim
 	 */
@@ -493,7 +481,6 @@ public class Go {
 	
 	
 	public void printBoard() {
-		//System.out.print("--------GAME BOARD--------\n");
 		String header = "ABCDEFGHJKLMNOPQRST";
 		System.out.print("    ");
 		for (int x = 0; x < this.xdim; x++) {
@@ -501,19 +488,14 @@ public class Go {
 		}
 		System.out.println();
 		
-		for (int y = ydim-1; y >= 0; y-- ) {
-			System.out.printf("%2d ",y+1);
+		for (int y = 0; y < ydim; y++ ) {
+			System.out.printf("%2d ",this.ydim-y);
 			for (int x = 0; x < this.xdim; x++) {
 				System.out.print(" " + board[y][x]);
 			}
 			System.out.println();
 		}
-		
-		//System.out.print("--------------------------\n");
-		
-		
 	}
-	
 	
 	public char[][] getBoard() {
 		return board;
@@ -533,22 +515,11 @@ public class Go {
 	}
 	
 	/**
-	 * Make a series of moves based of a variadic parameter
-	 *  required by Codewars Kata
-	 * @param moves
-	 * @throws Exception
-	 */
-	//public void move(String... moves) throws Exception {
-		
-		
-	//}
-	
-	/**
-	 * Have the current player make a move
+	 * Have the current player make a move 
 	 * @param gameCoords
 	 * @throws Exception
 	 */
-	public void move(String gameCoords) throws Exception {
+	public void move(String gameCoords) throws IllegalArgumentException {
 		//System.out.println("move() called.  gameCoords=" + gameCoords);
 		gameCoords = gameCoords.toUpperCase().trim();
 		
@@ -557,22 +528,34 @@ public class Go {
 		//  ie : 1A or 19A or 5J
 		String letStr = gameCoords.substring(gameCoords.length()-1);
 		String numStr = gameCoords.substring(0,gameCoords.length()-1);
-		// convert to x/y coords
-		int y = Integer.parseInt(numStr) - 1;
+		
+		// convert to x/y coordinates
+		int y = 0;
+		try {
+			y = this.ydim-Integer.parseInt(numStr);
+		} catch (NumberFormatException nfe) {
+			throw new IllegalArgumentException("Invalid game coordinates");
+		}
+		
+		if (y < 0 || y >= ydim) {
+			throw new IllegalArgumentException("Invalid game coordinates");
+		}
 		
 		// make sure that this move wont cause a self capture
+		String header = "ABCDEFGHJKLMNOPQRST".substring(0,this.xdim);
+		if (!header.contains(letStr)) { 
+			throw new IllegalArgumentException("Invalid game coordinates");
+		}
 		
-		
-		
-		String header = "ABCDEFGHJKLMNOPQRST";
 		int x = header.indexOf(letStr);
 		
+		
 		if ((x < 0) || (x >= this.xdim)) {
-			throw new Exception ("x must be between 0 and " + (this.xdim-1));
+			throw new IllegalArgumentException("Invalid game coordinates");
 		} 
 		
 		if ((y < 0 ) || (y >= this.ydim)) {
-			throw new Exception ("y must be between 0 and " + (this.ydim-1));
+			throw new IllegalArgumentException("Invalid game coordinates");
 		}
 		
 		if (this.wouldMoveCauseKO(y, x, currentTurn)) {
@@ -583,20 +566,14 @@ public class Go {
 			throw new IllegalArgumentException("Move would cause self capture.");
 		}
 		
-		// detect captures here
-		
-		//System.out.printf("move() letStr = %s  numStr = %s\n", letStr, numStr);
-		//System.out.printf("x = %d  y = %d \n\n", x, y);
-		//System.out.println("move() called.  gameCoords=" + gameCoords);
-		
 		saveBoardToPrevious();		// take a snapshot
 		copyBoardToStack();
 		this.board[y][x] = currentTurn;
 		currentTurn = (currentTurn == 'o') ? 'x' : 'o';
 
 	}
-	
-	
-	
-
+	private Exception IllegalArgumentException(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

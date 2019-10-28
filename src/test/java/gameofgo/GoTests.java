@@ -239,7 +239,8 @@ public class GoTests {
 		final int h = 9;
 		final int w = 16;
 		Go g = new Go(h, w);
-		assertEquals("Should be able to get the size of the correct board", new HashMap<String, Integer>() {
+		assertEquals("Should be able to get the size of the correct board", 
+				new HashMap<String, Integer>() {
 			{
 				put("height", h);
 				put("width", w);

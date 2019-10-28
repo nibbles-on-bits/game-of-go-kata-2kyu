@@ -11,11 +11,11 @@ public class Position implements Comparator <Position>{
 	public int getX() { return xCoord; }
 	public int getY() { return yCoord; }
 	
-	public Position(int y_idx, int x_idx) {
+	public Position(int y_idx, int x_idx, int boardHeight) {
 		yCoord = y_idx;
 		xCoord = x_idx;
 		String l = Character.toString("ABCDEFGHJKLMNOPQRST".charAt(x_idx));
-		String n = Integer.toString(y_idx+1);
+		String n = Integer.toString(boardHeight-y_idx);
 		chrPos = n + l ;
 		
 		return;
